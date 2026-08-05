@@ -10,11 +10,8 @@ pipeline {
 
     stage('Checkout') {
     steps {
-        sh '''
-            pwd
-            ls -la
-            ls -la java-maven-sonar-argocd-helm-k8s
-        '''
+        git branch: 'main',
+            url: 'https://github.com/Md-Azhar28/Jenkins-Zero-To-Hero.git'
     }
 }
 
@@ -71,15 +68,13 @@ pipeline {
     steps {
         withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
             sh '''
-                cd java-maven-sonar-argocd-helm-k8s
-
                 git config user.email "mhdazhar@gmail.com"
                 git config user.name "Md-Azhar28"
 
                 sed -i "s|image: mhdazhar/ultimate-cicd:.*|image: mhdazhar/ultimate-cicd:${BUILD_NUMBER}|g" \
-                spring-boot-app-manifests/deployment.yml
+                java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
 
-                git add spring-boot-app-manifests/deployment.yml
+                git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
 
                 git commit -m "Update deployment image to version ${BUILD_NUMBER}"
 
