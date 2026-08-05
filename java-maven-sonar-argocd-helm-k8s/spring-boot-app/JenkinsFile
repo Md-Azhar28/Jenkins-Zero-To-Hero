@@ -59,29 +59,31 @@ pipeline {
     }
 
     stage('Update Deployment File') {
-      environment {
+    environment {
         GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
         GIT_USER_NAME = "Md-Azhar28"
-      }
-
-      steps {
-        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-          sh '''
-            git config user.email "mhdazhar@gmail.com"
-            git config user.name "Md-Azhar28"
-
-            sed -i "s|image: mhdazhar/ultimate-cicd:.*|image: mhdazhar/ultimate-cicd:${BUILD_NUMBER}|g" \
-            java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-
-            git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-
-            git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-
-            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
-          '''
-        }
-      }
     }
+
+    steps {
+        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+            sh '''
+                cd java-maven-sonar-argocd-helm-k8s
+
+                git config user.email "mhdazhar@gmail.com"
+                git config user.name "Md-Azhar28"
+
+                sed -i "s|image: mhdazhar/ultimate-cicd:.*|image: mhdazhar/ultimate-cicd:${BUILD_NUMBER}|g" \
+                spring-boot-app-manifests/deployment.yml
+
+                git add spring-boot-app-manifests/deployment.yml
+
+                git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+
+                git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+            '''
+        }
+    }
+}
 
   }
 }
