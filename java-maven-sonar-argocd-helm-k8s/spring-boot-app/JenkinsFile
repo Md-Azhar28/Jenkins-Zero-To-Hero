@@ -9,10 +9,14 @@ pipeline {
   stages {
 
     stage('Checkout') {
-      steps {
-        sh 'echo passed'
-      }
+    steps {
+        sh '''
+            pwd
+            ls -la
+            ls -la java-maven-sonar-argocd-helm-k8s
+        '''
     }
+}
 
     stage('Build and Test') {
       steps {
