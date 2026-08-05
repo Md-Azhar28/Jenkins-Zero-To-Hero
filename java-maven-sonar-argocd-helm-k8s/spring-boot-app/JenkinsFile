@@ -68,20 +68,8 @@ pipeline {
     steps {
         withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
             sh '''
-                echo "===== CURRENT DIRECTORY ====="
-                pwd
-
-                echo "===== WORKSPACE FILES ====="
-                ls -la
-
-                echo "===== FIND .git ====="
-                find . -maxdepth 3 -name ".git" -print
-
-                echo "===== GIT STATUS ====="
-                git status || true
-
-                echo "===== GIT REV-PARSE ====="
-                git rev-parse --show-toplevel || true
+                # Allow Git to use the Jenkins-mounted workspace
+                git config --global --add safe.directory "$WORKSPACE"
 
                 git config user.email "mhdazhar@gmail.com"
                 git config user.name "Md-Azhar28"
